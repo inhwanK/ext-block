@@ -14,6 +14,8 @@ public class Extension {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    // unique key 고려하기, vo embeded로 빼기
     @Column(nullable = false, length = 20)
     private String name;
     @Column
