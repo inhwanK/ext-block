@@ -8,6 +8,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -15,27 +18,66 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ExtensionRepositoryTest {
 
     @Autowired
-    ExtensionRepository extensionRepository;
+    private ExtensionRepository extensionRepository;
 
-    Extension extension;
+    @Autowired
+    private TestEntityManager testEntityManager;
+
+    List<Extension> extensions;
 
     @BeforeEach
     void setUp() {
-        extension = Extension.builder()
-                .name("sh")
-                .pin(true)
-                .build();
+        // given
+        extensions = createExtensions();
+        extensions.forEach(ext -> extensionRepository.save(ext));
+        System.out.println(extensions.toString());
 
-        extensionRepository.save(extension);
+        testEntityManager.flush();
+        testEntityManager.clear();
     }
 
-    @DisplayName("확장자 조회 성공한다.")
+    private List<Extension> createExtensions() {
+        Extension extension1 = new Extension("sh", true, true);
+        Extension extension2 = new Extension( "exe", false, true);
+        Extension extension3 = new Extension( "bat", true, false);
+        Extension extension4 = new Extension( "txt", true, false);
+        Extension extension5 = new Extension( "md", true, true);
+
+        return List.of(
+                extension1, extension2, extension3, extension4, extension5
+        );
+    }
+
+    @DisplayName("커스텀 확장자만 조회 성공한다.")
     @Test
-    public void find_Extension_Success() {
+    public void find_NotPin_Extension_Success() {
+        // when
+        List<Extension> findResult = extensionRepository.findByPinFalse();
 
-        Extension actualExtension = extensionRepository.findById(1L).get();
+        // then
+        assertThat(findResult).hasSize(2);
+        assertThat(findResult)
+                .extracting("name")
+                .containsExactly(
+                        extensions.get(2).getName(),
+                        extensions.get(3).getName()
+                );
+    }
 
-        assertThat(actualExtension)
-                .isEqualTo(extension);
+    @DisplayName("고정 확장자만 조회 성공한다.")
+    @Test
+    public void find_Pin_Extension_Success() {
+        // when
+        List<Extension> findResult = extensionRepository.findByPinTrue();
+
+        // then
+        assertThat(findResult).hasSize(3);
+        assertThat(findResult)
+                .extracting("name")
+                .containsExactly(
+                        extensions.get(0).getName(),
+                        extensions.get(1).getName(),
+                        extensions.get(4).getName()
+                );
     }
 }
