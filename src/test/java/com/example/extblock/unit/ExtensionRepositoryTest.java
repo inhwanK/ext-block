@@ -30,7 +30,6 @@ public class ExtensionRepositoryTest {
         // given
         extensions = createExtensions();
         extensions.forEach(ext -> extensionRepository.save(ext));
-        System.out.println(extensions.toString());
 
         testEntityManager.flush();
         testEntityManager.clear();
