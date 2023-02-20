@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <style>
-    form {
-        text-align: center;
+    div {
+        margin: 10px auto;
     }
 </style>
 <head>
@@ -15,6 +15,9 @@
 
             getPinExtension();
             getCustomExtension();
+
+
+
             // 고정 확장자 모두 조회하기
             function getPinExtension() {
                 $.ajax({
@@ -54,21 +57,40 @@
 <body>
 
 
-<form>
-    <p>
-        <label for="title">고정 확장자</label>
-        <input type="text" id="title" name="title" required>
-    </p>
-    <p>
-        <label for="author">커스텀 확장자</label>
-        <input type="text" id="author" name="author" required>
-    </p>
-    <p>
-        <textarea id="content" name="content" required></textarea>
-    </p>
-    <button type="submit">글쓰기</button>
-    <button type="reset">초기화</button>
-</form>
+    <div style="width: 500px">
+        <table>
+            <hr>
+            <h3>◎파일 확장자 차단</h3>
+            <hr style="border: black solid 2px">
+            <h4>파일확장자에 따라 특정 형식의 파일을 첨부하거나 전송하지 못하도록 제한</h4>
+
+            <tbody>
+                <tr>
+                    <td><label>고정 확장자</label></td>
+                    <td><span><input type="checkbox"> <label>bat</label></span></td>
+                </tr>
+                <tr>
+                    <td><label>커스텀 확장자</label></td>
+                    <td ><span><input type="text"> <button> 추가 </button></span></td>
+                </tr>
+                <tr>
+                    <td><label></label></td>
+                    <td><span><div style="border: black solid 1px; height: 100px"></div></span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+<!--    <p>-->
+<!--        <label for="author">커스텀 확장자</label>-->
+<!--        <input type="text" id="author" name="author" required>-->
+<!--        <button>추가 </button>-->
+<!--    </p>-->
+<!--    <p>-->
+<!--        <textarea id="content" name="content" required></textarea>-->
+<!--    </p>-->
+
 
 <!--<table>-->
 <!--    <h1>◎파일 확장자 차단</h1>-->
