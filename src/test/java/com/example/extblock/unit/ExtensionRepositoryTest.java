@@ -3,7 +3,6 @@ package com.example.extblock.unit;
 
 import com.example.extblock.domain.Extension;
 import com.example.extblock.domain.ExtensionRepository;
-import com.example.extblock.domain.vo.ExtensionName;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
