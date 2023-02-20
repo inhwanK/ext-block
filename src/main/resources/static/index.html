@@ -1,66 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
+<style>
+    form {
+        text-align: center;
+    }
+</style>
 <head>
     <meta charset="UTF-8">
     <title>파일 확장자 차단</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript">
 
-        $(function() {
+        $(function () {
 
+            getPinExtension();
+            getCustomExtension();
             // 고정 확장자 모두 조회하기
-            $.ajax({
-                type: "GET",
-                url:"/api/extensions/pin",
-                contentType : 'application/json; charset=UTF-8',
-                dataType:"json",
-                success:function(data){
-                    console.log(data);
-                },
-                error:function(e, text){
-                    console.log(e,text);
-                }
-            });
+            function getPinExtension() {
+                $.ajax({
+                    type: "GET",
+                    url: "/api/extensions/pin",
+                    contentType: 'application/json; charset=UTF-8',
+                    dataType: "json",
+                    success: function (data) {
+                        console.log(data);
+                    },
+                    error: function (e, text) {
+                        console.log(e, text);
+                    }
+                });
+            }
+
 
             // 커스텀 확장자 전체 조회하기
-            $.ajax({
-                type: "GET",
-                url:"/api/extensions/custom",
-                contentType : 'application/json; charset=UTF-8',
-                dataType:"json",
-                success:function(data){
-                    console.log(data);
-                },
-                error:function(e, text){
-                    console.log(e,text);
-                }
-            });
-
+            function getCustomExtension() {
+                $.ajax({
+                    type: "GET",
+                    url: "/api/extensions/custom",
+                    contentType: 'application/json; charset=UTF-8',
+                    dataType: "json",
+                    success: function (data) {
+                        console.log(data);
+                    },
+                    error: function (e, text) {
+                        console.log(e, text);
+                    }
+                });
+            }
 
         });
     </script>
 </head>
 <body>
-    <h1>Hello, World!</h1>
-    <tbody>
-        <tr>
-            <th>고정 확장자</th>
-            <td>
-                <input type="checkbox"> <!-- 동적으로 데이터 가져 올 예정-->
-            </td>
-        </tr>
-        <tr>
-            <th>커스텀 확장자</th>
-            <td>
-                <!-- 동적으로 데이터 가져 올 예정-->
-                <input type="text"> <input type="button">
-            </td>
-        </tr>
-    </tbody>
 
-    <label>텍스트 상자<input type="text"></label>
-    <div style="border: 1px solid black; border-radius: 5px; width: 500px; height: 300px; margin: auto;">
 
-    </div>
+<form>
+    <p>
+        <label for="title">고정 확장자</label>
+        <input type="text" id="title" name="title" required>
+    </p>
+    <p>
+        <label for="author">커스텀 확장자</label>
+        <input type="text" id="author" name="author" required>
+    </p>
+    <p>
+        <textarea id="content" name="content" required></textarea>
+    </p>
+    <button type="submit">글쓰기</button>
+    <button type="reset">초기화</button>
+</form>
+
+<!--<table>-->
+<!--    <h1>◎파일 확장자 차단</h1>-->
+<!--    <span>파일확장자에 따라 특정 형식의 파일을 첨부하거나 전송하지 못하도록 제한</span>-->
+<!--    <tbody style="width: 1000px; height: 1000px; margin: auto auto;">-->
+<!--    <tr style="height: 20px;">-->
+<!--        <th style="width: 100px;">고정 확장자</th>-->
+<!--        <td>-->
+<!--            <input type="checkbox"> &lt;!&ndash; 동적으로 데이터 가져 올 예정&ndash;&gt;-->
+<!--        </td>-->
+<!--    </tr>-->
+<!--    <tr style="height: 20px;">-->
+<!--        <th style="width: 100px;">커스텀 확장자</th>-->
+<!--        <td>-->
+<!--            &lt;!&ndash; 동적으로 데이터 가져 올 예정&ndash;&gt;-->
+<!--            <input type="text"> <input type="button">-->
+
+
+<!--        </td>-->
+<!--    </tr>-->
+<!--    <tr style="height: 20px;">-->
+<!--        <th style="width: 100px;"></th>-->
+<!--        <td>-->
+<!--            <div style="border: 1px solid black; border-radius: 15px; min-width: 300px; min-height: 300px;">-->
+<!--                <div style="margin: 3px 3px 0px 3px"><span id="custom-count"> customCount </span>/200</div>-->
+<!--                <div id="custom-list-div" style="margin-top: 5px;">-->
+
+<!--                </div>-->
+<!--            </div>-->
+<!--        </td>-->
+<!--    </tr>-->
+<!--    </tbody>-->
+<!--</table>-->
+
+
 </body>
 </html>
