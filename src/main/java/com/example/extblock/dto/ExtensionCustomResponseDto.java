@@ -1,11 +1,12 @@
 package com.example.extblock.dto;
 
 
-import com.example.extblock.domain.Extension;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 // 이거 굳이 필요한가...
 @Getter
+@NoArgsConstructor
 public class ExtensionCustomResponseDto {
 
     private String name;
