@@ -8,7 +8,7 @@ public class ExtensionPinResponseDto {
     private Boolean checked;
 
     public ExtensionPinResponseDto(Extension extension) {
-        this.name = extension.getName();
+        this.name = extension.getExtensionName();
         this.checked = extension.getChecked();
     }
 }
