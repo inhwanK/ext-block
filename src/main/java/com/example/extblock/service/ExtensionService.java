@@ -19,8 +19,8 @@ public class ExtensionService {
 
     @Transactional
     public void createCustomExtension(String extensionName) {
-        if (isPresentName(extensionName)) {
-            // 이미 존재하는 확장자 예외, Invalid 말고 다른걸로.
+        if (isPresentName(refineExtensionName(extensionName))) {
+            // 이미 존재하는 확장자 예외, Invalid 말고 다른걸로 하면 좋을 듯.
             throw new InvalidExtensionException("이미 존재하는 확장자입니다.");
         }
 
@@ -34,9 +34,15 @@ public class ExtensionService {
         extensionRepository.save(extension);
     }
 
+    private String refineExtensionName(String extensionName) {
+        extensionName = extensionName.replace(" ", "");
+        extensionName = extensionName.toLowerCase();
+        return extensionName;
+    }
+
     @Transactional
     public void removeCustomExtension(String extensionName) {
-        if (!isCustomExtension(extensionName)) {
+        if (!isCustomExtension(refineExtensionName(extensionName))) {
             // 고정 확장자는 삭제할 수 없다는 예외
             throw new InvalidExtensionException("고정 확장자는 삭제할 수 없습니다.");
         }
