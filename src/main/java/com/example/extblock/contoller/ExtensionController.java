@@ -20,27 +20,32 @@ public class ExtensionController {
     private final ExtensionService extensionService;
     private final ExtensionRepository extensionRepository;
 
-    // 고정 확장자 조회하기 - pin 된 것만
+    // 고정 확장자 모두 조회하기
     @GetMapping("/extensions/pin")
     public List<ExtensionPinResponseDto> getPinExtensions() {
         List<Extension> extensions = extensionRepository.findByPinTrue();
         return pinResponseDtos(extensions);
     }
 
-    // 고정 확장자 check
-    @PatchMapping("/extensions/pin/valid")
-    public void checkPinExtension(@RequestParam String extensionName) {
-        return;
+    // 고정 확장자 check, restful 하지 않은 듯...
+    @PatchMapping("/extensions/pin/check")
+    public void checkPinExtension(
+            @RequestParam
+            @NotBlank String extensionName
+    ) {
+        extensionService.checkPinExtension(extensionName);
     }
 
     // 고정 확장자 uncheck
-    @PatchMapping("/extensions/pin/invalid")
-    public void unCheckPinExtension(@RequestParam String extensionName) {
-        return;
+    @PatchMapping("/extensions/pin/uncheck")
+    public void unCheckPinExtension(
+            @RequestParam
+            @NotBlank String extensionName
+    ) {
+        extensionService.unCheckPinExtension(extensionName);
     }
 
-
-    // 커스텀 확장자 조회하기
+    // 커스텀 확장자 전체 조회하기
     @GetMapping("/extensions/custom")
     public List<ExtensionCustomResponseDto> getCustomExtensions() {
         List<Extension> extensions = extensionRepository.findByPinFalse();
@@ -48,7 +53,9 @@ public class ExtensionController {
     }
 
     // 필요하면 어셈블러로 분리하기
-    private List<ExtensionPinResponseDto> pinResponseDtos(List<Extension> extensions) {
+    private List<ExtensionPinResponseDto> pinResponseDtos(
+            List<Extension> extensions
+    ) {
         List<ExtensionPinResponseDto> dtos = new ArrayList<>();
         extensions.forEach(extension ->
                 dtos.add(new ExtensionPinResponseDto(extension))
@@ -68,7 +75,7 @@ public class ExtensionController {
     // 커스텀 확장자 생성하기 - pin 되면 안됨
     @PostMapping("/extensions/custom")
     public void createCustomExtension(
-            @RequestParam(name = "extensionName")
+            @RequestParam
             @NotBlank String extensionName
     ) {
         extensionService.createCustomExtension(extensionName);
@@ -80,6 +87,6 @@ public class ExtensionController {
             @RequestParam
             @NotBlank String extensionName
     ) {
-        return;
+        extensionService.removeCustomExtension(extensionName);
     }
 }

@@ -19,7 +19,8 @@ public class ExtensionService {
 
     @Transactional
     public void createCustomExtension(String extensionName) {
-        if (isPresentName(refineExtensionName(extensionName))) {
+
+        if (!isPresentName(extensionName)) {
             // 이미 존재하는 확장자 예외, Invalid 말고 다른걸로 하면 좋을 듯.
             throw new InvalidExtensionException("이미 존재하는 확장자입니다.");
         }
@@ -34,6 +35,11 @@ public class ExtensionService {
         extensionRepository.save(extension);
     }
 
+    private Boolean isPresentName(String extensionName) {
+        return extensionRepository.findByExtensionName(new ExtensionName(extensionName))
+                .isPresent();
+    }
+
     private String refineExtensionName(String extensionName) {
         extensionName = extensionName.replace(" ", "");
         extensionName = extensionName.toLowerCase();
@@ -42,7 +48,7 @@ public class ExtensionService {
 
     @Transactional
     public void removeCustomExtension(String extensionName) {
-        if (!isCustomExtension(refineExtensionName(extensionName))) {
+        if (!isCustomExtension(extensionName)) {
             // 고정 확장자는 삭제할 수 없다는 예외
             throw new InvalidExtensionException("고정 확장자는 삭제할 수 없습니다.");
         }
@@ -50,15 +56,24 @@ public class ExtensionService {
     }
 
     private Boolean isCustomExtension(String extensionName) {
-        if (!isPresentName(extensionName)) {
-            // 존재하지 않는 확장자 예외
-            throw new InvalidExtensionException("존재하지 않는 확장자입니다.");
-        }
-        return extensionRepository.findByExtensionName(new ExtensionName(extensionName)).get().getPin();
+        return findExtension(refineExtensionName(extensionName))
+                .getPin();
     }
 
-    private Boolean isPresentName(String extensionName) {
+    @Transactional
+    public void checkPinExtension(String extensionName) {
+        Extension extension = findExtension(extensionName);
+        extension.check();
+    }
+
+    @Transactional
+    public void unCheckPinExtension(String extensionName) {
+        Extension extension = findExtension(extensionName);
+        extension.unCheck();
+    }
+
+    private Extension findExtension(String extensionName) {
         return extensionRepository.findByExtensionName(new ExtensionName(extensionName))
-                .isPresent();
+                .orElseThrow(() -> new InvalidExtensionException("존재하지 않는 확장자입니다."));
     }
 }

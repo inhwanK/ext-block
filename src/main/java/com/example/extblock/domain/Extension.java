@@ -18,7 +18,7 @@ public class Extension {
     @Embedded
     private ExtensionName extensionName;
     @Column
-    @ColumnDefault("true")
+    @ColumnDefault("false")
     private Boolean checked;
     @Column
     @ColumnDefault("false")
@@ -37,6 +37,14 @@ public class Extension {
 
     public String getExtensionName() {
         return extensionName.getExtensionName();
+    }
+
+    public void check() {
+        this.checked = true;
+    }
+
+    public void unCheck() {
+        this.checked = false;
     }
 
     @Override
