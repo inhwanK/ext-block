@@ -60,8 +60,8 @@
                     url: "/api/extensions/custom",
                     contentType: 'application/json; charset=UTF-8',
                     dataType: "json",
-                    success: function (data) {
-                        console.log(data);
+                    success: function (json) {
+                        $('span#custom-count').text(json.length);
                     },
                     error: function (e, text) {
                         console.log(e, text);
@@ -73,7 +73,6 @@
     </script>
 </head>
 <body>
-
 
     <div style="width: 500px">
         <table>
@@ -89,60 +88,21 @@
                 </tr>
                 <tr>
                     <td><label>커스텀 확장자</label></td>
-                    <td ><span><input type="text"> <button> 추가 </button></span></td>
+                    <td><span><input type="text"> <button id="create-custom"> 추가 </button></span></td>
                 </tr>
                 <tr>
-                    <td><label></label></td>
-                    <td><div style="border: black solid 1px; height: 100px"></div></td>
+                    <td></td>
+                    <td>
+                        <div style="border: black solid 1px; height: 100px">
+                            <div style="margin: 3px 3px 2px 3px; font-size: 12px;"><span id="custom-count">  </span>/200</div>
+                            <br>
+<!--                            <div id="custom-list-div" style="margin-top: 5px;">-->
+                        </div>
+                    </td>
                 </tr>
             </tbody>
         </table>
     </div>
-
-
-<!--    <p>-->
-<!--        <label for="author">커스텀 확장자</label>-->
-<!--        <input type="text" id="author" name="author" required>-->
-<!--        <button>추가 </button>-->
-<!--    </p>-->
-<!--    <p>-->
-<!--        <textarea id="content" name="content" required></textarea>-->
-<!--    </p>-->
-
-
-<!--<table>-->
-<!--    <h1>◎파일 확장자 차단</h1>-->
-<!--    <span>파일확장자에 따라 특정 형식의 파일을 첨부하거나 전송하지 못하도록 제한</span>-->
-<!--    <tbody style="width: 1000px; height: 1000px; margin: auto auto;">-->
-<!--    <tr style="height: 20px;">-->
-<!--        <th style="width: 100px;">고정 확장자</th>-->
-<!--        <td>-->
-<!--            <input type="checkbox"> &lt;!&ndash; 동적으로 데이터 가져 올 예정&ndash;&gt;-->
-<!--        </td>-->
-<!--    </tr>-->
-<!--    <tr style="height: 20px;">-->
-<!--        <th style="width: 100px;">커스텀 확장자</th>-->
-<!--        <td>-->
-<!--            &lt;!&ndash; 동적으로 데이터 가져 올 예정&ndash;&gt;-->
-<!--            <input type="text"> <input type="button">-->
-
-
-<!--        </td>-->
-<!--    </tr>-->
-<!--    <tr style="height: 20px;">-->
-<!--        <th style="width: 100px;"></th>-->
-<!--        <td>-->
-<!--            <div style="border: 1px solid black; border-radius: 15px; min-width: 300px; min-height: 300px;">-->
-<!--                <div style="margin: 3px 3px 0px 3px"><span id="custom-count"> customCount </span>/200</div>-->
-<!--                <div id="custom-list-div" style="margin-top: 5px;">-->
-
-<!--                </div>-->
-<!--            </div>-->
-<!--        </td>-->
-<!--    </tr>-->
-<!--    </tbody>-->
-<!--</table>-->
-
 
 </body>
 </html>
