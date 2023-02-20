@@ -1,5 +1,6 @@
 package com.example.extblock.domain;
 
+import com.example.extblock.domain.vo.ExtensionName;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -14,10 +15,8 @@ public class Extension {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    // unique key 고려하기, vo embeded로 빼기
-    @Column(nullable = false, length = 20)
-    private String name;
+    @Embedded
+    private ExtensionName extensionName;
     @Column
     @ColumnDefault("true")
     private Boolean checked;
@@ -27,20 +26,24 @@ public class Extension {
 
     @Builder
     public Extension(
-            String name,
+            String extensionName,
             Boolean checked,
             Boolean pin
     ) {
-        this.name = name;
+        this.extensionName = new ExtensionName(extensionName);
         this.checked = checked;
         this.pin = pin;
+    }
+
+    public String getExtensionName() {
+        return extensionName.getExtensionName();
     }
 
     @Override
     public String toString() {
         return "Extension{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", name='" + extensionName + '\'' +
                 ", checked=" + checked +
                 ", pin=" + pin +
                 '}';
