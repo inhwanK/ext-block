@@ -1,5 +1,6 @@
 package com.example.extblock.exception;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -7,8 +8,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ApiExceptionAdvice {
 
     @ExceptionHandler(InvalidExtensionException.class)
-    public String extensionExceptionHandler() {
-        return "예외 테스트";
+    public ResponseEntity<ExceptionResponse> extensionExceptionHandler(
+            InvalidExtensionException ex
+    ) {
+        return ExceptionResponse
+                .toResponseEntity(ex);
     }
 
 }
