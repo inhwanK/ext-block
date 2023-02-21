@@ -9,13 +9,71 @@
     <meta charset="UTF-8">
     <title>파일 확장자 차단</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="text/javascript">
-
-        $(function () {
-
+    <script>
+        $(function(){
             getPinExtension();
             getCustomExtension();
 
+            // 커스텀 확장자 추가
+            $("button#create-custom").click(function() {
+                const extensionName = $("input#create-extension-name").val();
+                console.log("extensionName = " + extensionName);
+                createCustomExtension(extensionName);
+                // getCustomExtension();
+            });
+
+            // 커스텀 확장자 추가
+            // function createCustomExtension(extensionName) {
+            //     $.ajax({
+            //         type: "POST",
+            //         url: "/api/extensions/custom?extensionName=" + extensionName,
+            //         contentType: 'application/json; charset=UTF-8',
+            //         dataType: "json",
+            //         success: function () {
+            //             // getCustomExtension();
+            //         },
+            //         error: function (e, text) {
+            //             console.log(e, text);
+            //         }
+            //     });
+            // }
+
+            function createCustomExtension(extensionName) {
+                return new Promise(function (resolve, reject) {
+                    $.get("/api/extensions/custom?extensionName=" + extensionName, function (json) {
+                        resolve();
+                    })
+                });
+            }
+            createCustomExtension().then(function() {
+                getCustomExtension();
+            })
+
+            // 커스텀 확장자 전체 조회하기
+            function getCustomExtension() {
+                $.get("/api/extensions/custom", function (json) {
+                    $('span#custom-count').text(json.length);
+                    console.log("custom count : " + json.length);
+                });
+            }
+
+
+
+                // $.ajax({
+                //     type: "GET",
+                //     url: "/api/extensions/custom",
+                //     contentType: 'application/json; charset=UTF-8',
+                //     dataType: "json",
+                //     success: function (json) {
+                //
+                //         console.log("before : "+json.length)
+                //         $('span#custom-count').text(json.length);
+                //         console.log("after : " + $('span#custom-count').text());
+                //     },
+                //     error: function (e, text) {
+                //         console.log(e, text);
+                //     }
+                // });
 
 
             // 고정 확장자 모두 조회하기
@@ -33,7 +91,6 @@
                             list += "</span>";
                         }
 
-
                         $("td#pin").empty();
                         $("td#pin").append(list);
 
@@ -43,7 +100,6 @@
                             }
                         }
 
-
                         console.log(json);
                     },
                     error: function (e, text) {
@@ -51,25 +107,13 @@
                     }
                 });
             }
+        })
 
 
-            // 커스텀 확장자 전체 조회하기
-            function getCustomExtension() {
-                $.ajax({
-                    type: "GET",
-                    url: "/api/extensions/custom",
-                    contentType: 'application/json; charset=UTF-8',
-                    dataType: "json",
-                    success: function (json) {
-                        $('span#custom-count').text(json.length);
-                    },
-                    error: function (e, text) {
-                        console.log(e, text);
-                    }
-                });
-            }
 
-        });
+
+
+
     </script>
 </head>
 <body>
@@ -88,15 +132,15 @@
                 </tr>
                 <tr>
                     <td><label>커스텀 확장자</label></td>
-                    <td><span><input type="text"> <button id="create-custom"> 추가 </button></span></td>
+                    <td><span><input type="text" id="create-extension-name"> <button id="create-custom"> 추가 </button></span></td>
                 </tr>
                 <tr>
                     <td></td>
                     <td>
                         <div style="border: black solid 1px; height: 100px">
-                            <div style="margin: 3px 3px 2px 3px; font-size: 12px;"><span id="custom-count">  </span>/200</div>
+                            <div style="margin: 3px 3px 2px 3px; font-size: 12px;"><span id="custom-count"> </span>/200</div>
                             <br>
-<!--                            <div id="custom-list-div" style="margin-top: 5px;">-->
+                            <div id="custom-list-div" style="margin-top: 5px;"></div>
                         </div>
                     </td>
                 </tr>
