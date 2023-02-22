@@ -77,13 +77,11 @@ public class ExtensionController {
 
     // 커스텀 확장자 생성하기 - pin 되면 안됨
     @PostMapping("/extensions/custom")
-    public ResponseEntity<Void> createCustomExtension(
+    public void createCustomExtension(
             @RequestParam
             @NotBlank String extensionName
     ) {
         extensionService.createCustomExtension(extensionName);
-        return ResponseEntity.ok()
-                .build();
     }
 
     // 커스텀 확장자 삭제하기 - pin 된 건 삭제하면 안됨

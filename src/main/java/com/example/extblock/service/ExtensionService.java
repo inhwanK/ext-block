@@ -48,14 +48,14 @@ public class ExtensionService {
 
     @Transactional
     public void removeCustomExtension(String extensionName) {
-        if (!isCustomExtension(extensionName)) {
+        if (isPinExtension(extensionName)) {
             // 고정 확장자는 삭제할 수 없다는 예외
             throw new InvalidExtensionException("고정 확장자는 삭제할 수 없습니다.");
         }
         extensionRepository.deleteByExtensionName(new ExtensionName(extensionName));
     }
 
-    private Boolean isCustomExtension(String extensionName) {
+    private Boolean isPinExtension(String extensionName) {
         return findExtension(refineExtensionName(extensionName))
                 .getPin();
     }
