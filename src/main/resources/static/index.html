@@ -49,18 +49,20 @@
         getCustomExtension();
 
         // 커스텀 확장자 추가
-        $("#custom-create").on('click', function () {
-            const extensionName = $("input#create-extension-name").val();
-            console.log("extensionName = " + extensionName);
+        $(document).on('click', "#custom-create", function () {
+            if($("#custom-count").text() === "200") {
+                alert("커스텀 확장자는 200개가 최대입니다.");
+                return;
+            }
+            let extensionName = $(".input-extension-name").val();
             createCustomExtension(extensionName);
         });
 
         $(document).on("click", ".custom-delete", function () {
-            console.log("event 호출됨");
+
             const extensionName = $(this).prev().text();
-            console.log("삭제할 요소 extensionName = " + extensionName);
             deleteCustomExtension(extensionName);
-            // getCustomExtension();
+            getCustomExtension();
         });
 
         // 고정 확장자 모두 조회하기
@@ -132,10 +134,10 @@
                 contentType: 'application/json; charset=UTF-8',
                 success: function () {
                     getCustomExtension();
-                    console.log("success");
                 },
-                error: function (e, text) {
-                    console.log(e, text);
+                error: function (e) {
+                    let json = JSON.parse(e.responseText);
+                    alert(json.errorMessage);
                 }
             })
         }
@@ -149,10 +151,10 @@
                 contentType: 'application/json; charset=UTF-8',
                 success: function () {
                     getCustomExtension();
-                    console.log("success");
                 },
-                error: function (e, text) {
-                    console.log(e, text);
+                error: function (e) {
+                    let json = JSON.parse(e.responseText);
+                    alert(json.errorMessage);
                 }
             });
         }
@@ -182,7 +184,7 @@
             </td>
             <td class="right">
                 <span>
-                    <input type="text" id="create-extension-name"> <button type="button" id="custom-create"> 추가 </button>
+                    <input type="text" class="input-extension-name"> <button type="button" id="custom-create"> 추가 </button>
                 </span>
             </td>
         </tr>

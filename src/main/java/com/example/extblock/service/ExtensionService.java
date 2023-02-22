@@ -19,7 +19,6 @@ public class ExtensionService {
 
     @Transactional
     public void createCustomExtension(String extensionName) {
-
         if (isPresentName(extensionName)) {
             // 이미 존재하는 확장자 예외, Invalid 말고 다른걸로 하면 좋을 듯.
             throw new InvalidExtensionException("이미 존재하는 확장자입니다.");
@@ -36,7 +35,7 @@ public class ExtensionService {
     }
 
     private Boolean isPresentName(String extensionName) {
-        return extensionRepository.findByExtensionName(new ExtensionName(extensionName))
+        return extensionRepository.findByExtensionName(new ExtensionName(refineExtensionName(extensionName)))
                 .isPresent();
     }
 
