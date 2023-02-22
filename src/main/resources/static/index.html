@@ -14,6 +14,13 @@
         padding: 2px 2px;
     }
 
+    div#pin-extension {
+        display: inline-block;
+        border: none;
+        margin: 3px 3px;
+        padding: 2px 2px;
+    }
+
     button#custom-delete {
         cursor: pointer;
         background: white;
@@ -26,7 +33,7 @@
     }
 
     td.right {
-        width: 70%;
+        width: 75%;
     }
 </style>
 <head>
@@ -66,9 +73,11 @@
                 success: function (json) {
                     let list = "";
                     for (i = 0; i < json.length; i++) {
+                        list += "<div id='pin-extension'>";
                         list += "<span style=\"margin-left: 2px; margin-right: 2px\">";
                         list += "<input type=\"checkbox\" id=\"" + json[i].name + "\"> <label>" + json[i].name + "</label>";
                         list += "</span>";
+                        list += "</div>";
                     }
 
                     $("td#pin").empty().append(list);
@@ -153,8 +162,8 @@
 
 </script>
 
-<div style="width: 600px">
-    <table style="margin: 20px auto; width: 500px;">
+<div style="width: 550px">
+    <table style="margin: 20px auto; width: 550px;">
         <hr>
         <h3>◎파일 확장자 차단</h3>
         <hr style="border: black solid 2px">
