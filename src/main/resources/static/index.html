@@ -10,12 +10,12 @@
     <title>파일 확장자 차단</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(function(){
+        $(function () {
             getPinExtension();
             getCustomExtension();
 
             // 커스텀 확장자 추가
-            $("button#create-custom").click(function() {
+            $("button#create-custom").click(function () {
                 const extensionName = $("input#create-extension-name").val();
                 console.log("extensionName = " + extensionName);
                 createCustomExtension(extensionName);
@@ -28,9 +28,11 @@
             //         type: "POST",
             //         url: "/api/extensions/custom?extensionName=" + extensionName,
             //         contentType: 'application/json; charset=UTF-8',
-            //         dataType: "json",
-            //         success: function () {
-            //             // getCustomExtension();
+            //         dataType: 'json',
+            //         async: false,
+            //         success: function() {
+            //             console.log("success");
+            //
             //         },
             //         error: function (e, text) {
             //             console.log(e, text);
@@ -38,42 +40,47 @@
             //     });
             // }
 
-            function createCustomExtension(extensionName) {
-                return new Promise(function (resolve, reject) {
-                    $.get("/api/extensions/custom?extensionName=" + extensionName, function (json) {
-                        resolve();
-                    })
-                });
-            }
-            createCustomExtension().then(function() {
-                getCustomExtension();
-            })
-
             // 커스텀 확장자 전체 조회하기
             function getCustomExtension() {
-                $.get("/api/extensions/custom", function (json) {
-                    $('span#custom-count').text(json.length);
-                    console.log("custom count : " + json.length);
+                $.ajax({
+                    type: "GET",
+                    url: "/api/extensions/custom",
+                    contentType: 'application/json; charset=UTF-8',
+                    dataType: 'json',
+                    // async: false,
+                    success: function (json) {
+                        $('span#custom-count').text(json.length);
+                        console.log("json.length > " + json.length);
+                    },
+                    error: function (e, text) {
+                        console.log(e, text);
+                    }
                 });
             }
 
+            // 커스텀 확장자 추가 promise
+            function createCustomExtension(extensionName) {
+                return new Promise(function(resolve, reject) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/api/extensions/custom?extensionName=" + extensionName,
+                        contentType: 'application/json; charset=UTF-8',
+                        dataType: 'json',
+                        // async: false,
+                        success: function() {
+                            console.log("success");
+                            resolve(extensionName);
+                        },
+                        error: function (e, text) {
+                            console.log(e, text);
+                        }
+                    });
+                });
+            }
 
-
-                // $.ajax({
-                //     type: "GET",
-                //     url: "/api/extensions/custom",
-                //     contentType: 'application/json; charset=UTF-8',
-                //     dataType: "json",
-                //     success: function (json) {
-                //
-                //         console.log("before : "+json.length)
-                //         $('span#custom-count').text(json.length);
-                //         console.log("after : " + $('span#custom-count').text());
-                //     },
-                //     error: function (e, text) {
-                //         console.log(e, text);
-                //     }
-                // });
+            createCustomExtension('extensionName').then(function() {
+                getCustomExtension();
+            });
 
 
             // 고정 확장자 모두 조회하기
@@ -84,19 +91,18 @@
                     contentType: 'application/json; charset=UTF-8',
                     dataType: "json",
                     success: function (json) {
-                        var list = "";
+                        let list = "";
                         for (i = 0; i < json.length; i++) {
                             list += "<span style=\"margin-left: 2px; margin-right: 2px\">";
-                            list += "<input type=\"checkbox\" id=\"" + json[i].name + "\"> <label>" + json[i].name +"</label>";
+                            list += "<input type=\"checkbox\" id=\"" + json[i].name + "\"> <label>" + json[i].name + "</label>";
                             list += "</span>";
                         }
 
-                        $("td#pin").empty();
-                        $("td#pin").append(list);
+                        $("td#pin").empty().append(list);
 
-                        for(i = 0; i < json.length; i++) {
-                            if(json[i].checked) {
-                                $('input:checkbox[id=\"' + json[i].name+ '\"]').prop('checked', true);
+                        for (i = 0; i < json.length; i++) {
+                            if (json[i].checked) {
+                                $('input:checkbox[id=\"' + json[i].name + '\"]').prop('checked', true);
                             }
                         }
 
@@ -110,43 +116,40 @@
         })
 
 
-
-
-
-
     </script>
 </head>
 <body>
 
-    <div style="width: 500px">
-        <table>
-            <hr>
-            <h3>◎파일 확장자 차단</h3>
-            <hr style="border: black solid 2px">
-            <h4>파일확장자에 따라 특정 형식의 파일을 첨부하거나 전송하지 못하도록 제한</h4>
+<div style="width: 500px">
+    <table>
+        <hr>
+        <h3>◎파일 확장자 차단</h3>
+        <hr style="border: black solid 2px">
+        <h4>파일확장자에 따라 특정 형식의 파일을 첨부하거나 전송하지 못하도록 제한</h4>
 
-            <tbody>
-                <tr>
-                    <td><label>고정 확장자</label></td>
-                    <td id="pin"></td>
-                </tr>
-                <tr>
-                    <td><label>커스텀 확장자</label></td>
-                    <td><span><input type="text" id="create-extension-name"> <button id="create-custom"> 추가 </button></span></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td>
-                        <div style="border: black solid 1px; height: 100px">
-                            <div style="margin: 3px 3px 2px 3px; font-size: 12px;"><span id="custom-count"> </span>/200</div>
-                            <br>
-                            <div id="custom-list-div" style="margin-top: 5px;"></div>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+        <tbody>
+        <tr>
+            <td><label>고정 확장자</label></td>
+            <td id="pin"></td>
+        </tr>
+        <tr>
+            <td><label>커스텀 확장자</label></td>
+            <td><span><input type="text" id="create-extension-name"> <button id="create-custom"> 추가 </button></span>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <div style="border: black solid 1px; height: 100px">
+                    <div style="margin: 3px 3px 2px 3px; font-size: 12px;"><span id="custom-count"> </span>/200</div>
+                    <br>
+                    <div id="custom-list-div" style="margin-top: 5px;"></div>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 
 </body>
 </html>
