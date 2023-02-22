@@ -2,7 +2,30 @@
 <html lang="en">
 <style>
     div {
-        margin: 10px auto;
+        margin: auto;
+    }
+
+    div#custom-extension {
+        display: inline-block;
+        background-color: white;
+        border: 1px solid black;
+        border-radius: 2px;
+        margin: 3px 3px;
+        padding: 2px 2px;
+    }
+
+    button#custom-delete {
+        cursor:pointer;
+        background: white;
+        border: none;
+        margin-left: 3px;
+        padding: 0 0;
+        color:black;
+        font-weight: bold;
+        font-size: 12px;
+    }
+    td.right {
+        width: 70%;
     }
 </style>
 <head>
@@ -19,26 +42,25 @@
                 const extensionName = $("input#create-extension-name").val();
                 console.log("extensionName = " + extensionName);
                 createCustomExtension(extensionName);
-                // getCustomExtension();
+                getCustomExtension();
             });
 
-            // 커스텀 확장자 추가
-            // function createCustomExtension(extensionName) {
-            //     $.ajax({
-            //         type: "POST",
-            //         url: "/api/extensions/custom?extensionName=" + extensionName,
-            //         contentType: 'application/json; charset=UTF-8',
-            //         dataType: 'json',
-            //         async: false,
-            //         success: function() {
-            //             console.log("success");
-            //
-            //         },
-            //         error: function (e, text) {
-            //             console.log(e, text);
-            //         }
-            //     });
-            // }
+            // 커스텀 확장자 추가 api
+            function createCustomExtension(extensionName) {
+                $.ajax({
+                    type: "POST",
+                    url: "/api/extensions/custom?extensionName=" + extensionName,
+                    contentType: 'application/json; charset=UTF-8',
+                    dataType: 'json',
+                    async: false,
+                    success: function() {
+                        console.log("success");
+                    },
+                    error: function (e, text) {
+                        console.log(e, text);
+                    }
+                });
+            }
 
             // 커스텀 확장자 전체 조회하기
             function getCustomExtension() {
@@ -47,41 +69,28 @@
                     url: "/api/extensions/custom",
                     contentType: 'application/json; charset=UTF-8',
                     dataType: 'json',
-                    // async: false,
+                    async: false,
                     success: function (json) {
+
                         $('span#custom-count').text(json.length);
                         console.log("json.length > " + json.length);
+
+                        let list = "";
+                        for(let i = 0; i < json.length; i++){
+                            list += "<div id=\"custom-extension\">";
+                            list += "<span style=\"font-size: 12px;\">";
+                            list += json[i].name;
+                            list += "</span>";
+                            list += "<button id=\"custom-delete\">X</button>";
+                            list += "</div>";
+                        }
+                        $("div#custom-list-div").empty().append(list);
                     },
                     error: function (e, text) {
                         console.log(e, text);
                     }
                 });
             }
-
-            // 커스텀 확장자 추가 promise
-            function createCustomExtension(extensionName) {
-                return new Promise(function(resolve, reject) {
-                    $.ajax({
-                        type: "POST",
-                        url: "/api/extensions/custom?extensionName=" + extensionName,
-                        contentType: 'application/json; charset=UTF-8',
-                        dataType: 'json',
-                        // async: false,
-                        success: function() {
-                            console.log("success");
-                            resolve(extensionName);
-                        },
-                        error: function (e, text) {
-                            console.log(e, text);
-                        }
-                    });
-                });
-            }
-
-            createCustomExtension('extensionName').then(function() {
-                getCustomExtension();
-            });
-
 
             // 고정 확장자 모두 조회하기
             function getPinExtension() {
@@ -100,7 +109,7 @@
 
                         $("td#pin").empty().append(list);
 
-                        for (i = 0; i < json.length; i++) {
+                        for (let i = 0; i < json.length; i++) {
                             if (json[i].checked) {
                                 $('input:checkbox[id=\"' + json[i].name + '\"]').prop('checked', true);
                             }
@@ -120,8 +129,8 @@
 </head>
 <body>
 
-<div style="width: 500px">
-    <table>
+<div style="width: 600px">
+    <table style="margin: 20px auto; width: 500px;">
         <hr>
         <h3>◎파일 확장자 차단</h3>
         <hr style="border: black solid 2px">
@@ -129,21 +138,30 @@
 
         <tbody>
         <tr>
-            <td><label>고정 확장자</label></td>
-            <td id="pin"></td>
+            <td>
+                <label>고정 확장자</label></td>
+            <td class="right" id="pin">
+
+            </td>
         </tr>
         <tr>
-            <td><label>커스텀 확장자</label></td>
-            <td><span><input type="text" id="create-extension-name"> <button id="create-custom"> 추가 </button></span>
+            <td>
+                <label>커스텀 확장자</label>
+            </td>
+            <td class="right">
+                <span>
+                    <input type="text" id="create-extension-name"> <button id="create-custom"> 추가 </button>
+                </span>
             </td>
         </tr>
         <tr>
             <td></td>
-            <td>
-                <div style="border: black solid 1px; height: 100px">
+            <td class="right">
+                <div style="overflow: auto; border: black solid 1px; padding: 2px 5px; height: 200px">
                     <div style="margin: 3px 3px 2px 3px; font-size: 12px;"><span id="custom-count"> </span>/200</div>
-                    <br>
-                    <div id="custom-list-div" style="margin-top: 5px;"></div>
+                    <div id="custom-list-div" style="margin-top: 5px;">
+
+                    </div>
                 </div>
             </td>
         </tr>
