@@ -6,9 +6,12 @@ import com.example.extblock.dto.ExtensionCustomResponseDto;
 import com.example.extblock.dto.ExtensionPinResponseDto;
 import com.example.extblock.service.ExtensionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,11 +77,13 @@ public class ExtensionController {
 
     // 커스텀 확장자 생성하기 - pin 되면 안됨
     @PostMapping("/extensions/custom")
-    public void createCustomExtension(
+    public ResponseEntity<Void> createCustomExtension(
             @RequestParam
             @NotBlank String extensionName
     ) {
         extensionService.createCustomExtension(extensionName);
+        return ResponseEntity.ok()
+                .build();
     }
 
     // 커스텀 확장자 삭제하기 - pin 된 건 삭제하면 안됨
