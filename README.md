@@ -4,7 +4,7 @@
 ### 요건
 - [x] 고정 확장자는 차단을 자주하는 확장자 리스트
     - [x] unCheck 상태가 default 값
-- [ ] check, uncheck 할 때마다 db에 저장
+- [x] check, uncheck 할 때마다 db에 저장
     - 새로고침시 유지
     - 커스텀 확장자는 check, uncheck가 없는 것에 유의
 

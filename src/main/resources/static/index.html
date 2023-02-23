@@ -50,7 +50,7 @@
 
         // 커스텀 확장자 추가
         $(document).on('click', "#custom-create", function () {
-            if($("#custom-count").text() === "200") {
+            if ($("#custom-count").text() === "200") {
                 alert("커스텀 확장자는 200개가 최대입니다.");
                 return;
             }
@@ -59,10 +59,27 @@
         });
 
         $(document).on("click", ".custom-delete", function () {
-
             const extensionName = $(this).prev().text();
             deleteCustomExtension(extensionName);
             getCustomExtension();
+        });
+
+        $(document).on("change", "input[type=checkbox]", function () {
+            let extensionName = $(this).prop('name');
+            if ($(this).is(':checked')) {
+                checkPinExtension(extensionName);
+            } else {
+                uncheckPinExtension(extensionName);
+            }
+        });
+
+
+        $('input[type=checkbox][name=gender]').change(function () {
+            if ($(this).is(':checked')) {
+                alert(`${this.value} is checked`);
+            } else {
+                alert(`${this.value} is unchecked`);
+            }
         });
 
         // 고정 확장자 모두 조회하기
@@ -97,9 +114,39 @@
             });
         }
 
+        function checkPinExtension(extensionName) {
+            $.ajax({
+                type: "PATCH",
+                url: "/api/extensions/pin/check?extensionName=" + extensionName,
+                contentType: 'application/json; charset=UTF-8',
+                success: function () {
+                    getPinExtension();
+                    console.log(extensionName + " is checked");
+                },
+                error: function (e, text) {
+                    console.log(e, text);
+                }
+            });
+        }
+
+        function uncheckPinExtension(extensionName) {
+            $.ajax({
+                type: "PATCH",
+                url: "/api/extensions/pin/uncheck?extensionName=" + extensionName,
+                contentType: 'application/json; charset=UTF-8',
+                success: function () {
+                    getPinExtension();
+                    console.log(extensionName + " is unchecked");
+                },
+                error: function (e, text) {
+                    console.log(e, text);
+                }
+            });
+        }
+
         // 커스텀 확장자 리스트 만들기
         function getCustomExtension() {
-            return $.ajax({
+            $.ajax({
                 type: "GET",
                 url: "/api/extensions/custom",
                 contentType: 'application/json; charset=UTF-8',
@@ -184,7 +231,8 @@
             </td>
             <td class="right">
                 <span>
-                    <input type="text" class="input-extension-name"> <button type="button" id="custom-create"> 추가 </button>
+                    <input type="text" class="input-extension-name"> <button type="button"
+                                                                             id="custom-create"> 추가 </button>
                 </span>
             </td>
         </tr>
