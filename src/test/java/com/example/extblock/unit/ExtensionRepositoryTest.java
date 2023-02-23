@@ -3,6 +3,8 @@ package com.example.extblock.unit;
 
 import com.example.extblock.domain.Extension;
 import com.example.extblock.domain.ExtensionRepository;
+import com.example.extblock.domain.vo.ExtensionName;
+import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DataJpaTest
 public class ExtensionRepositoryTest {
@@ -78,5 +81,35 @@ public class ExtensionRepositoryTest {
                         extensions.get(1).getExtensionName(),
                         extensions.get(4).getExtensionName()
                 );
+    }
+
+    @DisplayName("확장자 이름으로 조회 성공한다.")
+    @Test
+    public void find_Extension_By_Name_Success() {
+        // when
+        Extension findResult = extensionRepository.findByExtensionName(new ExtensionName("txt"))
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 확장자입니다."));
+
+        // then
+        assertThat(findResult)
+                .isEqualTo(extensions.get(3));
+    }
+
+    @DisplayName("확장자 이름으로 삭제 성공한다.")
+    @Test
+    public void delete_Extension_By_Name_Success() {
+        // when
+        extensionRepository.deleteByExtensionName(new ExtensionName("txt"));
+
+        List<Extension> findResult = extensionRepository.findByPinFalse();
+
+        assertThat(findResult).hasSize(1);
+        // then
+        assertThatThrownBy(
+                () -> extensionRepository.findByExtensionName(new ExtensionName("txt"))
+                        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 확장자입니다."))
+        )
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("존재하지 않는 확장자입니다.");
     }
 }
