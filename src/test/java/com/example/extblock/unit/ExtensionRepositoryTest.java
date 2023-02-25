@@ -21,10 +21,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 public class ExtensionRepositoryTest {
 
     @Autowired
-    private ExtensionRepository extensionRepository;
+    ExtensionRepository extensionRepository;
 
     @Autowired
-    private TestEntityManager testEntityManager;
+    TestEntityManager testEntityManager;
 
     List<Extension> extensions;
 

@@ -24,12 +24,24 @@ public class Extension {
     @ColumnDefault("false")
     private Boolean pin;
 
-    @Builder
     public Extension(
             String extensionName,
             Boolean checked,
             Boolean pin
     ) {
+        this.extensionName = new ExtensionName(extensionName);
+        this.checked = checked;
+        this.pin = pin;
+    }
+
+    @Builder
+    public Extension(
+            Long id,
+            String extensionName,
+            Boolean checked,
+            Boolean pin
+    ) {
+        this.id = id;
         this.extensionName = new ExtensionName(extensionName);
         this.checked = checked;
         this.pin = pin;
